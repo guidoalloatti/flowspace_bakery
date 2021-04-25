@@ -7,6 +7,7 @@ class OvensController < ApplicationController
 
   def show
     @oven = current_user.ovens.find_by!(id: params[:id])
+    @fillings = @oven.cookie&.fillings.present? ? @oven.cookie.fillings : "no fillings"
   end
 
   def empty
