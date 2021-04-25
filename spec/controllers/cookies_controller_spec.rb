@@ -5,7 +5,7 @@ describe CookiesController do
   let(:oven) { user.ovens.first }
 
   describe 'GET new' do
-    let(:the_request) { get :new, params: { oven_id: oven.id } }
+    let(:the_request) { get :new, params: { oven_id: oven.id, cookie: { fillings: "Coconut" } } }
 
     context "when not authenticated" do
       before { sign_in nil }
@@ -106,6 +106,20 @@ describe CookiesController do
             the_request
           }.to raise_error(ActiveRecord::RecordNotFound)
         end
+      end
+    end
+
+    context "when a cookie with an empty filling is baked" do
+      let(:cookie_params) {
+        {
+          fillings: ''
+        }
+      }
+
+      it "won't bake the cookie" do
+        expect {
+          the_request
+        }.to_not change{Cookie.count}
       end
     end
 

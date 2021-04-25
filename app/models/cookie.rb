@@ -3,6 +3,8 @@ class Cookie < ActiveRecord::Base
   
   validates :storage, presence: true
 
+  validates_presence_of :fillings, message: "no fillings!"
+
   def ready?
     true
   end
