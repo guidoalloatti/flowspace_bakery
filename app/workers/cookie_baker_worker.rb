@@ -1,7 +1,7 @@
 class CookieBakerWorker
   include Sidekiq::Worker
 
-	BAKING_DURATION_SECONDS = 1
+	BAKING_DURATION_SECONDS = 5
 
 	def perform(cookie_id) 
     sleep BAKING_DURATION_SECONDS

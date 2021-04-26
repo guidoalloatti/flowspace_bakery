@@ -42,6 +42,20 @@ feature 'Cooking cookies' do
     expect(page).to_not have_button 'Mix and bake'
   end
 
+  scenario 'Baking a cookie when not ready' do
+    user = create_and_signin
+    oven = user.ovens.first
+
+    oven = FactoryGirl.create(:oven, user: user)
+    visit oven_path(oven)
+
+    click_link_or_button 'Prepare Cookie'
+    fill_in 'Fillings', with: 'Chocolate Chip'
+    click_button 'Mix and bake'
+
+    expect(page).to have_content 'Baking your cookie... please wait.'
+  end
+
   scenario 'Baking multiple cookies', skip: true do
     user = create_and_signin
     oven = user.ovens.first
