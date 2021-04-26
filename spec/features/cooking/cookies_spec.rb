@@ -42,7 +42,7 @@ feature 'Cooking cookies' do
     expect(page).to_not have_button 'Mix and bake'
   end
 
-  scenario 'Baking a cookie when not ready' do
+  scenario 'Baking a batch of 3 cookies when not ready' do
     user = create_and_signin
     oven = user.ovens.first
 
@@ -51,9 +51,10 @@ feature 'Cooking cookies' do
 
     click_link_or_button 'Prepare Cookie'
     fill_in 'Fillings', with: 'Chocolate Chip'
+    fill_in 'Batch amount', with: '3'
     click_button 'Mix and bake'
 
-    expect(page).to have_content 'Baking your cookie... please wait.'
+    expect(page).to have_content 'Baking a batch of 3 cookie/s... please wait.'
   end
 
   scenario 'Baking multiple cookies', skip: true do

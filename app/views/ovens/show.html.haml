@@ -1,17 +1,17 @@
 %h3= @oven.name
 
 .cookie-info
-  Cookie in oven:
+  Cookie/s in oven:
   - if @oven.cookie
-    1 cookie with #{@oven.cookie.fillings || "no fillings"}
+    #{@oven.cookie.batch_amount} cookie/s with #{@oven.cookie.fillings || "no fillings"}
     - if @oven.cookie.ready?
       #cookie-status-text
-        %h6 Your Cookie is Ready
+        %h6 Your batch of #{@oven.cookie.batch_amount} cookies with #{@oven.cookie.fillings || "no fillings"} is ready to pick up from Oven
     - else
       #cookie-status-text
-        %h6 Baking your cookie... please wait.
+        %h6 Baking a batch of #{@oven.cookie.batch_amount} cookie/s... please wait.
     #cookie-status-button
-      = button_to "Retrieve Cookie", empty_oven_path, class: 'button tiny'
+      = button_to "Retrieve #{@oven.cookie.batch_amount} Cookie/s", empty_oven_path, class: 'button tiny'
   - else
     None
 
@@ -37,7 +37,7 @@
         .then(data => {
           if (data.status == "baked") {
             clearInterval(interval)
-            $("#cookie-status-text").html('<h6>Your Cookie is Ready</h6>')
+            $("#cookie-status-text").html('<h6>Your batch of #{@oven.cookie.batch_amount} cookies with #{@oven.cookie.fillings || "no fillings"} is ready to pick up from Oven</h6>')
             $("#cookie-status-button").show()
           }
         })
