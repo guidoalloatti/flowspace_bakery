@@ -27,6 +27,26 @@ This application requires:
 - Ruby 2.6.2
 - PostgreSQL server running on localhost
 
-Similar Projects
+
+Steps
 ----------------
-[Momofuku milk bar](http://milkbarstore.com/)
+- Install and Set rails version to `2.6.2` (rbenv or rvm)
+- Run: `bundle install`
+- Run: `rake db:create`
+- Run: `rake db:migrate`
+
+Start Rails Server
+----------------
+- Run: `rails s`
+
+Start Sidekiq Server
+----------------
+- Run: `bundle exec sidekiq`
+
+Visit the page
+----------------
+- Go to: `localhost:3000`
+- Complete the credentials:
+	- Username: `bake`
+	- Password: `somecookies`
+- Register and login!
