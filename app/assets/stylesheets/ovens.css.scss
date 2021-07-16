@@ -1,3 +1,15 @@
 // Place all the styles related to the ovens controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.remove-oven-button {
+	color: #FFF;
+    background: #d94279;
+    padding: 1px 10px;
+    border-radius: 4px;
+    margin-top: -25px;
+    position: absolute;
+    /* float: right; */
+    right: 425px;
+    font-size: 12px;
+}

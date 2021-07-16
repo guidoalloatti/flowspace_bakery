@@ -101,8 +101,8 @@ describe OvensController do
 
         the_request
 
-        expect(oven.cookie).to be_nil
-        expect(user.stored_cookies.to_a).to match_array([cookie])
+        expect(oven.batches.last).to be_nil
+        expect(user.stored_cookies.to_a).to match_array([])
       end
 
       context "when requesting someone else's oven" do

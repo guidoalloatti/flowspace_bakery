@@ -9,7 +9,7 @@ feature 'Cooking cookies' do
     expect(page).to_not have_content 'Your Cookie is Ready'
 
     click_link_or_button 'Prepare Cookie'
-    fill_in 'Fillings', with: 'Chocolate Chip'
+    fill_in 'cookie[fillings]', with: 'Chocolate Chip'
     click_button 'Mix and bake'
 
     expect(current_path).to eq(oven_path(oven))
@@ -33,11 +33,11 @@ feature 'Cooking cookies' do
     visit oven_path(oven)
 
     click_link_or_button 'Prepare Cookie'
-    fill_in 'Fillings', with: 'Chocolate Chip'
+    fill_in 'cookie[fillings]', with: 'Chocolate Chip'
     click_button 'Mix and bake'
 
     click_link_or_button  'Prepare Cookie'
-    expect(page).to have_content 'A cookie is already in the oven!'
+    expect(page).to have_content 'Some cookies are already in the oven!'
     expect(current_path).to eq(oven_path(oven))
     expect(page).to_not have_button 'Mix and bake'
   end
@@ -50,11 +50,13 @@ feature 'Cooking cookies' do
     visit oven_path(oven)
 
     click_link_or_button 'Prepare Cookie'
-    fill_in 'Fillings', with: 'Chocolate Chip'
-    fill_in 'Batch amount', with: '3'
+    fill_in 'cookie[fillings]', with: 'Chocolate Chip'
+    # fill_in 'Batch amount', with: '3'
+    find('.primary-button.add-to-batch').click
+    # click_button '.fill-oven'
     click_button 'Mix and bake'
 
-    expect(page).to have_content 'Baking a batch of 3 cookie/s... please wait.'
+    expect(page).to have_content 'Baking a batch of 1 cookie/s... please wait.'
   end
 
   scenario 'Baking multiple cookies', skip: true do
@@ -66,7 +68,7 @@ feature 'Cooking cookies' do
 
     3.times do
       click_link_or_button 'Prepare Cookie'
-      fill_in 'Fillings', with: 'Chocolate Chip'
+      fill_in 'cookie[fillings]', with: 'Chocolate Chip'
       click_button 'Mix and bake'
 
       click_button 'Retrieve Cookie'

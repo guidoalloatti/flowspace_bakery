@@ -3,19 +3,30 @@ class CookiesController < ApplicationController
 
   def new
     @oven = current_user.ovens.find_by!(id: params[:oven_id])
-    if @oven.cookie
-      redirect_to @oven, alert: 'A cookie is already in the oven!'
+    
+    if @oven.batches&.last&.cookies&.any?
+      redirect_to @oven, alert: 'Some cookies are already in the oven!'
     else
-      @cookie = @oven.build_cookie
+      @cookie = Cookie.new
     end
   end
 
   def create
+    batch_size = cookie_params[:batch_amount].to_i
     @oven = current_user.ovens.find_by!(id: params[:oven_id])
-    @cookie = @oven.create_cookie!(cookie_params)
 
-    ::CookieBakerWorker.perform_async(@cookie.id)
+    @batch = @oven.batches.create({
+      filling: cookie_params[:fillings],
+      size: cookie_params[:batch_amount],
+      status: 'baking'
+    })
 
+    @batch.size.times do
+      @batch.cookies.create!(cookie_params.merge!({batch_id: @batch.id}))
+    end
+
+    ::CookieBakerWorker.perform_async(@batch.id)
+    
     redirect_to oven_path(@oven)
   end
 

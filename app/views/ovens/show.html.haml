@@ -2,27 +2,27 @@
 
 .cookie-info
   Cookie/s in oven:
-  - if @oven.cookie
-    #{@oven.cookie.batch_amount} cookie/s with #{@oven.cookie.fillings || "no fillings"}
-    - if @oven.cookie.ready?
+  - unless @is_empty
+    #{@size} cookie/s with #{@fillings}
+    - unless @is_baking
       #cookie-status-text
-        %h6 Your batch of #{@oven.cookie.batch_amount} cookies with #{@oven.cookie.fillings || "no fillings"} is ready to pick up from Oven
+        %h6 Your batch of #{@size} cookies with #{@fillings} is ready to pick up from Oven
     - else
       #cookie-status-text
-        %h6 Baking a batch of #{@oven.cookie.batch_amount} cookie/s... please wait.
+        %h6 Baking a batch of #{@size} cookie/s... please wait.
+
     #cookie-status-button
-      = button_to "Retrieve #{@oven.cookie.batch_amount} Cookie/s", empty_oven_path, class: 'button tiny'
+      = button_to "Retrieve #{@size} #{@fillings} Cookie/s", empty_oven_path, class: 'button tiny retrieve-button'
   - else
     None
-
 %br
 
 = link_to "Prepare Cookie", new_oven_cookies_path(@oven), class: 'button'
 
-- if @oven.cookie && !@oven.cookie.ready?
+- if !@is_empty && @is_baking  
   :javascript
-    $("#cookie-status-button").hide();
-    const TIMEOUT_IN_SECONDS = 1000;
+    $("#cookie-status-button").hide()
+    const TIMEOUT_IN_SECONDS = 1000
     const cookieStatusChecker = {
       interval: '',
       run: function () {
@@ -32,12 +32,12 @@
         )
       },
       checkCookieStatus: function() {
-        fetch('/api/cookies/#{@oven.cookie.id}/status')
+        fetch('/api/batches/#{@batch_id}/status')
         .then(response => response.json())
         .then(data => {
           if (data.status == "baked") {
             clearInterval(interval)
-            $("#cookie-status-text").html('<h6>Your batch of #{@oven.cookie.batch_amount} cookies with #{@oven.cookie.fillings || "no fillings"} is ready to pick up from Oven</h6>')
+            $("#cookie-status-text").html('<h6>Your batch of #{@size} cookies with #{@fillings || "no fillings"} is ready to pick up from Oven</h6>');
             $("#cookie-status-button").show()
           }
         })

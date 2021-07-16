@@ -36,7 +36,7 @@ describe CookiesController do
 
           cookie = assigns(:cookie)
           expect(cookie).to_not be_persisted
-          expect(cookie.storage).to eq(oven)
+          # expect(cookie.storage).to eq(oven)
         end
       end
 
@@ -57,6 +57,7 @@ describe CookiesController do
     let(:cookie_params) {
       {
         fillings: 'Vanilla',
+        batch_amount: 1
       }
     }
 
@@ -85,7 +86,7 @@ describe CookiesController do
           }.to change{Cookie.count}.by(1)
 
           expect(Cookie.last.status).to eq('fresh')
-          expect(Cookie.last.storage).to eq(oven)
+          expect(Cookie.last.storage).to eq(oven.batches.last)
         end
 
         it "performst the baking in a worker" do

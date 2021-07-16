@@ -4,22 +4,21 @@
 
 = form_for [@oven, @cookie] do |f|
   .row
-    .small-1.columns
-      = f.label :fillings
-    .small-4.columns
-      = f.label :batch_amount
+    .small-6.columns
+      = f.text_field :fillings, placeholder: "Please enter your Filling! (Leave empty for no fillings)"
   .row
-    .small-4.columns
-      = f.text_field :fillings
-    .small-1.columns
-      = f.text_field :batch_amount
-    .add-cookie
-      %button.btn.btn-primary.primary-button.add-to-batch{ type: 'button' } + Add Cookie
-      %button.btn.btn-primary.primary-button.remove-from-batch{ type: 'button' } - Remove Cookie
+    .small-12.columns.add-cookie.columns
+      %button.btn.btn-primary.primary-button.fill-oven{ type: 'button' } ++ Fill the Batch!
+      %button.btn.btn-primary.primary-button.add-to-batch{ type: 'button' } + Add 1 Cookie
+      %button.btn.btn-primary.primary-button.remove-from-batch{ type: 'button' } - Remove 1 Cookie
+      %button.btn.btn-primary.primary-button.clean-oven{ type: 'button' } -- Clean the Batch!
   .row
     #amount_of_cookies
       %h4 Current Batch | Total cookies: 0 | Max: 16
   
+  .hidden
+    = f.text_field :batch_amount
+
   .row
     #cookies_batch_list
       No cookies yet!
@@ -31,6 +30,7 @@
       = f.submit 'Mix and bake', class: 'button'
 
 :javascript
+  var batch_max_size = 16;
   var cookies = [];
   var cookies_html = '';
   
@@ -44,6 +44,26 @@
       handleErrors(false)
       setBatchAmount()
     }
+  });
+
+  $(".fill-oven").click(function() {
+    cookies = []
+    var filling = $("#cookie_fillings").val() == "" ? "no fillings" : $("#cookie_fillings").val()
+    for(i = 0; i < batch_max_size; i++) {
+      cookies.push(filling)
+    }
+    updateCookieCounter()
+    buildCookiesList()
+    handleErrors(false)
+    setBatchAmount()
+  });
+
+  $(".clean-oven").click(function() {
+    cookies = []
+    updateCookieCounter()
+    buildCookiesList()
+    handleErrors(false)
+    setBatchAmount()
   });
 
   $(".add-to-batch").click(function() {

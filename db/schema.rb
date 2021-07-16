@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210426051339) do
+ActiveRecord::Schema.define(version: 20210716060250) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "batches", force: :cascade do |t|
+    t.string "filling"
+    t.integer "size"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "oven_id"
+    t.index ["oven_id"], name: "index_batches_on_oven_id"
+  end
 
   create_table "cookies", force: :cascade do |t|
     t.string "fillings"
@@ -23,6 +33,8 @@ ActiveRecord::Schema.define(version: 20210426051339) do
     t.string "storage_type"
     t.string "status", default: "fresh", null: false
     t.integer "batch_amount", default: 1, null: false
+    t.bigint "batch_id"
+    t.index ["batch_id"], name: "index_cookies_on_batch_id"
   end
 
   create_table "ovens", force: :cascade do |t|
@@ -51,4 +63,6 @@ ActiveRecord::Schema.define(version: 20210426051339) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "batches", "ovens"
+  add_foreign_key "cookies", "batches"
 end

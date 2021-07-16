@@ -6,6 +6,26 @@
 
 }
 
+.hidden {
+  display: none;
+}
+
+.fill-oven {
+  color: #FFF;
+  height: 37px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #3a9aff;
+}
+
+.clean-oven {
+  color: #FFF;
+  height: 37px;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #ff7614;
+}
+
 .add-to-batch {
   color: #FFF;
   height: 37px;

@@ -1,5 +1,16 @@
-%h3 My Ovens
+%h3 My Ovens (#{@count})
 
 %ul.ovens
   - @ovens.each do |oven|
-    %li= link_to oven.name, oven
+    - next unless oven.id.present? 
+    %li= link_to "#{oven.id} - #{oven.name} owned by: #{oven.user.email}", oven
+    = link_to 'Remove Oven', [oven], :data => { :confirm => 'Are you sure?' }, :method => :delete, class: "remove-oven-button"
+
+
+= form_for [@oven] do |f|
+  .row
+    .small-4.columns
+      = f.text_field :name, placeholder: "Oven name please!"
+  .row
+    .small-8.columns
+      = f.submit 'Create new oven', class: 'button'
