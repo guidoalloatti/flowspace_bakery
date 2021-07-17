@@ -12,8 +12,14 @@ class CookiesController < ApplicationController
 
   def create
     @oven = current_user.ovens.find_by!(id: params[:oven_id])
-    @cookie = @oven.create_cookie!(cookie_params)
-    redirect_to oven_path(@oven)
+
+    unless cookie_params[:fillings].present?
+      flash[:error] = "no fillings!"
+      redirect_to new_oven_cookies_path(@oven)
+    else
+      @cookie = @oven.create_cookie!(cookie_params)
+      redirect_to oven_path(@oven)
+    end
   end
 
   private

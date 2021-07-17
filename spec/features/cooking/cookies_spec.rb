@@ -43,6 +43,18 @@ feature 'Cooking cookies' do
     expect(page).to_not have_button 'Mix and bake'
   end
 
+  scenario 'Baking a cookie with no fillings' do
+    user = create_and_signin
+    oven = user.ovens.first
+
+    visit oven_path(oven)
+
+    click_link_or_button 'Prepare Cookie'
+    click_button 'Mix and bake'
+
+    expect(page).to have_content 'no fillings!'
+  end
+
   scenario 'Baking multiple cookies' do
     user = create_and_signin
     oven = user.ovens.first
