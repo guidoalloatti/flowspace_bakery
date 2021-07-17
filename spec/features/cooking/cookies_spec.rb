@@ -43,6 +43,22 @@ feature 'Cooking cookies' do
     expect(page).to_not have_button 'Mix and bake'
   end
 
+  scenario 'Baking a cookie with no fillings will show the no fillings message' do
+    user = create_and_signin
+    oven = user.ovens.first
+
+    visit oven_path(oven)
+
+    click_link_or_button 'Prepare Cookie'
+    click_button 'Mix and bake'
+    click_button 'Retrieve Cookie'
+
+    visit root_path
+    within '.store-inventory' do
+      expect(page).to have_content 'no fillings'
+    end
+  end
+
   scenario 'Baking multiple cookies' do
     user = create_and_signin
     oven = user.ovens.first
