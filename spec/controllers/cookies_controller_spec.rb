@@ -79,12 +79,18 @@ describe CookiesController do
       end
 
       context "when a valid oven is supplied" do
-        it "creates a cookie for that oven" do
+        it "creates a fresh cookie for that oven" do
           expect {
             the_request
           }.to change{Cookie.count}.by(1)
 
+          expect(Cookie.last.status).to eq('fresh')
           expect(Cookie.last.storage).to eq(oven)
+        end
+
+        it "performst the baking in a worker" do
+          expect(CookieBakerWorker).to receive(:perform_async)
+          the_request
         end
 
         it "redirects to the oven" do
