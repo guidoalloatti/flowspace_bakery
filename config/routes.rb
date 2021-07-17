@@ -1,6 +1,13 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 
+  namespace :api do
+    resources :cookies do #, only: [:show, :status]
+      get :status
+      get :show
+    end
+  end
+
   devise_for :users
 
   authenticated :user do
