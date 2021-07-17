@@ -1,16 +1,88 @@
+.errors
+
 %h3 New Cookie for oven '#{@oven.name}'
 
 = form_for [@oven, @cookie] do |f|
   .row
-    .small-8.columns
+    .small-1.columns
       = f.label :fillings
+    .small-4.columns
+      = f.label :batch_amount
   .row
-    .small-8.columns
+    .small-4.columns
       = f.text_field :fillings
+    .small-1.columns
+      = f.text_field :batch_amount
+    .add-cookie
+      %button.btn.btn-primary.primary-button.add-to-batch{ type: 'button' } + Add Cookie
+      %button.btn.btn-primary.primary-button.remove-from-batch{ type: 'button' } - Remove Cookie
+  .row
+    #amount_of_cookies
+      %h4 Current Batch | Total cookies: 0 | Max: 16
+  
+  .row
+    #cookies_batch_list
+      No cookies yet!
+
+  %hr
 
   .row
     .small-8.columns
       = f.submit 'Mix and bake', class: 'button'
 
+:javascript
+  var cookies = [];
+  var cookies_html = '';
+  
+  $(".remove-from-batch").click(function() {
+    if(cookies.length < 1) {
+      handleErrors(true, "Sorry, there are no cookies to remove from the batch")
+    } else {
+      cookies.pop()
+      updateCookieCounter()
+      buildCookiesList()
+      handleErrors(false)
+      setBatchAmount()
+    }
+  });
 
+  $(".add-to-batch").click(function() {
+    var filling = $("#cookie_fillings").val() == "" ? "no fillings" : $("#cookie_fillings").val()
+    if(cookies.length > 15) {
+      handleErrors(true, "Sorry, that is not the max number of cookies you can bake on this batch")
+    } else if(cookies.length < 1 || (cookies.length > 0 && cookies[0] == filling)) {
+      cookies.push(filling)
+      
+      updateCookieCounter()
+      buildCookiesList()
+      handleErrors(false)
+      setBatchAmount()
+    } else {
+      handleErrors(true, "Sorry, that is not the same filling that the rest of the batch, please add a cookie with " + cookies[0])
+    }
+  });
 
+  function handleErrors(show, error_message) {
+    if(show) {
+      $(".errors").html("").show()
+      $(".errors").html(error_message)
+    } else {
+      $(".errors").html("").hide()
+    } 
+  }
+
+  function setBatchAmount() {
+    $("#cookie_batch_amount").val(cookies.length)
+  }
+
+  function updateCookieCounter() {
+    $("#amount_of_cookies").html("<h4>Current Batch | Total cookies: " + cookies.length + " | Max: 16")
+  }
+
+  function buildCookiesList() {
+    cookies_html = ""
+    $.each(cookies, function(index, filling) {
+      cookies_html = cookies_html + "<li>Cookie with " + filling + "</li>"
+    })
+    $("#cookies_batch_list").html(cookies_html)
+  }
